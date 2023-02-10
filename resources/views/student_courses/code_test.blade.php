@@ -131,7 +131,8 @@
         "user": '{{ \Illuminate\Support\Facades\Auth::user()->email }}',
       };
       $.ajax({
-        url: "http://127.0.0.1:8000/compiler/run",
+        url: "https://fransiska.pythonanywhere.com/compiler/run",
+        // url: "http://127.0.0.1:8000/compiler/run",
         type: "POST",
         data: to_compile
       }).done(function(data) {
