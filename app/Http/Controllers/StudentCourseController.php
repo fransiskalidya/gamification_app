@@ -8,6 +8,8 @@ use App\Models\Course;
 use App\Models\Question;
 use App\Models\StudentCourse;
 use App\Models\User;
+use App\Models\Level;
+use App\Models\Lesson;
 use App\Models\UserScore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,19 +91,22 @@ $fullbadge = BadgeSetting::all();
         }
     }
 
-    public function my_course($course_id, $content_id = null)
+    public function my_course($course_id , $level_id, $content_id = null)
     {
         $course = Course::find($course_id);
-        $contents = $content_id != null ? Content::find($content_id) : $course->lessons[0]->contents->first();
+        $level = Level::find($level_id);
+        $contents = $content_id != null ? Content::find($content_id) : $level->lessons[0]->contents->first();
         $user_score = UserScore::where(["content_id" => $content_id == null ? $contents->id : $content_id, "user_id" => Auth::id()])->first();
         $total_score = UserScore::where("user_id", Auth::id())->sum("score");
-        $active_lesson = $content_id != null ? Content::find($content_id)->lesson : $course->lessons->first();
+        $active_lesson = $content_id != null ? Content::find($content_id)->lesson : $level->lessons->first();
         $current_badge = BadgeSetting::where("min", "<=", $total_score)->where("max", ">=", $total_score)->first();
         $questions = Question::where(["is_essay" => "0", "content_id" => $content_id])->get();
         $code_test = Question::where(["is_essay" => "1", "content_id" => $content_id])->get();
         $take = UserScore::where("user_id", Auth::id())->pluck("question_id")->toArray();
 
+        //active_lesson untuk melihat course yang dibuka saat ini
         return view("student_courses.my_course", [
+            "level" => $level,
             "course" => $course,
             "content" => $contents,
             "score" => $user_score,
@@ -134,4 +139,10 @@ $fullbadge = BadgeSetting::all();
             "code_score" => $code_test_score
         ]);
     }
+
+    public function level($course_id){
+        $level = Level::where('course_id', $course_id)->get();
+        return view("student_courses.level", compact('level', 'course_id'));
+    }
+
 }

@@ -62,5 +62,9 @@ class Course extends Model
         return $this->hasMany(StudentCourse::class);
     }
 
+    public function level(){
+        return $this->hasMany(Level::class);
+    }
+
 
 }

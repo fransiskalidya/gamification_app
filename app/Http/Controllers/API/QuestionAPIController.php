@@ -56,6 +56,7 @@ class QuestionAPIController extends AppBaseController
     }
 
     public function checkAnswer(Request $request){
+        dd('masuk');
         //if(Auth::check()){
             $score = 0;
             $data = json_decode($request->getContent(), true);
@@ -101,17 +102,18 @@ class QuestionAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
-    {
-        /** @var Question $question */
-        $question = $this->questionRepository->find($id);
+    // public function show($id)
+    // {
+    //     /** @var Question $question */
+    //     $question = $this->questionRepository->find($id);
+    //     dd([$id,$question]);
 
-        if (empty($question)) {
-            return $this->sendError('Question not found');
-        }
+    //     if (empty($question)) {
+    //         return $this->sendError('Question not found');
+    //     }
 
-        return $this->sendResponse($question->toArray(), 'Question retrieved successfully');
-    }
+    //     return $this->sendResponse($question->toArray(), 'Question retrieved successfully');
+    // }
 
     /**
      * Update the specified Question in storage.

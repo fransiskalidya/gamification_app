@@ -31,6 +31,7 @@ class Lesson extends Model
         'title',
         'description',
         'course_id',
+        'level_id',
         'posisition',
         'published'
     ];
@@ -46,7 +47,8 @@ class Lesson extends Model
         'description' => 'string',
         'course_id' => 'integer',
         'posisition' => 'integer',
-        'published' => 'integer'
+        'published' => 'integer',
+        'level_id'  => 'integer'
     ];
 
     /**
@@ -66,5 +68,9 @@ class Lesson extends Model
 
     public function contents(){
         return $this->hasMany(Content::class);
+    }
+
+    public function level(){
+        return $this->belongsTo(\App\Models\Level::class, 'level_id');
     }
 }

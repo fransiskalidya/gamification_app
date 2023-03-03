@@ -11,6 +11,10 @@
   <a href="{{ route('admin.courses.index') }}"><i class="fa fa-book"></i><span>Courses</span></a>
 </li>
 
+<li class="{{ Request::is('level*') ? 'active' : '' }}">
+  <a href="{{ route('admin.level.index') }}"><i class="fa fa-book"></i><span>Level</span></a>
+</li>
+
 <li class="{{ Request::is('lessons*') ? 'active' : '' }}">
   <a href="{{ route('admin.lessons.index') }}"><i class="fa fa-book-open"></i><span>Lessons</span></a>
 </li>

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateLessonRequest;
 use App\Repositories\LessonRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Course;
+use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
@@ -45,8 +46,9 @@ class LessonController extends AppBaseController
     public function create()
     {
         $courses = Course::all()->pluck("course_name", "id")->toArray();
+        $level = Level::all()->pluck("name","id")->toArray();
         Log::debug($courses);
-        return view('admin.lessons.create', ["courses" => $courses]);
+        return view('admin.lessons.create', ["courses" => $courses, "level" => $level]);
     }
 
     /**
@@ -78,14 +80,13 @@ class LessonController extends AppBaseController
     {
         $lesson = $this->lessonRepository->find($id);
 
-
         if (empty($lesson)) {
             Flash::error('Lesson not found');
 
             return redirect(route('admin.lessons.index'));
         }
 
-        return view('admin.lessons.show')->with('lesson', $lesson);
+        return view('admin.lessons.show', compact('lesson'));
     }
 
     /**
@@ -99,6 +100,7 @@ class LessonController extends AppBaseController
     {
         $lesson = $this->lessonRepository->find($id);
         $courses = Course::all()->pluck("course_name", "id")->toArray();
+        $level = Level::all()->pluck("name","id")->toArray();
 
         if (empty($lesson)) {
             Flash::error('Lesson not found');
@@ -106,7 +108,7 @@ class LessonController extends AppBaseController
             return redirect(route('admin.lessons.index'));
         }
 
-        return view('admin.lessons.edit')->with('lesson', $lesson)->with("courses", $courses);
+        return view('admin.lessons.edit', compact('lesson','courses','level'));
     }
 
     /**

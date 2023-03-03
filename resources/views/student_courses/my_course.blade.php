@@ -73,8 +73,7 @@
                   <div>
                     @foreach ($questions as $index => $question)
                       @if ($question->is_essay == '0')
-                        <div>{{ $index + 1 }}
-                          .{!! $question->question !!}<br />
+                        <div>{{ $index + 1 }}.{!! $question->question !!}<br />
                           <div class="ml-2">
                             <small>Your answer</small>
                             <br />
@@ -91,6 +90,10 @@
                         </div><br />
                       @endif
                     @endforeach
+
+                    {{--<a href="api/questions/check_answer/" class="btn btn-primary" >
+                      Finish
+                    </a>--}}
 
                     <button class="btn btn-primary"
                       v-on:click="checkAnswer({{ \Illuminate\Support\Facades\Auth::id() }}, {{ $content->id }})">
@@ -175,7 +178,7 @@
               Lesson Content
             </h5>
             <div class="accordion" id="accordionExample">
-              @foreach ($course->lessons as $index => $lesson)
+              @foreach ($level->lessons as $index => $lesson)
                 <div class="accordion-item">
                   <div class="accordion-header" data-toggle="collapse" data-target="#item{{ $index }}"
                     aria-expanded="{{ $active_lesson->id == $lesson->id ? 'true' : 'false' }}"
@@ -188,7 +191,7 @@
                     <div class="accordion-body">
                       <div class="list-group row list-group-flush">
                         @foreach ($lesson->contents as $content)
-                          <a href="{{ route('student_course.my_course.detail.content', [$course->id, $content->id]) }}"
+                          <a href="{{ route('student_course.my_course.detail.content', [$course->id, $level->id, $content->id]) }}"
                             type="button"
                             class="list-group-item list-group-item-action {{ $content->id == $active_content->id ? 'active' : '' }}">
                             {{ $content->title }}</a>
@@ -228,8 +231,8 @@
         "user": '{{ \Illuminate\Support\Facades\Auth::user()->email }}',
       };
       $.ajax({
-        url: "https://fransiska.pythonanywhere.com/compiler/run",
-        // url: "http://127.0.0.1:8000/compiler/run",
+        // url: "https://fransiska.pythonanywhere.com/compiler/run",
+        url: "http://127.0.0.1:8000/compiler/run",
         type: "POST",
         data: to_compile
       }).done(function(data) {

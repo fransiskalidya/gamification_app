@@ -31,17 +31,19 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
     Route::resource('questions', App\Http\Controllers\Admin\QuestionController::class);
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('badgeSettings', \App\Http\Controllers\Admin\BadgeSettingController::class);
+    Route::resource('level', App\Http\Controllers\Admin\LevelController::class);
 });
 
 Route::group(['middleware' => ["auth"]], function () {
     Route::get("/courses/my_course", [\App\Http\Controllers\StudentCourseController::class, "index"])->name("student_course.my_course");
     Route::post("/take_course", [\App\Http\Controllers\StudentCourseController::class, "takeCourse"])->name("student_course.take");
-    Route::get("/courses/my_course/{course_id}", [\App\Http\Controllers\StudentCourseController::class, "my_course"])->name("student_course.my_course.detail");
-    Route::get("/courses/my_course/{course_id}/detail/{content_id?}", [\App\Http\Controllers\StudentCourseController::class, "my_course"])->name("student_course.my_course.detail.content");
+    Route::get("/courses/my_course/{course_id}/{level_id}", [\App\Http\Controllers\StudentCourseController::class, "my_course"])->name("student_course.my_course.detail");
+    Route::get("/courses/my_course/{course_id}/{level_id}/detail/{content_id?}", [\App\Http\Controllers\StudentCourseController::class, "my_course"])->name("student_course.my_course.detail.content");
     Route::get("/courses/detail/{course_id}", [\App\Http\Controllers\StudentCourseController::class, "detail"])->name("student_course.detail");
     Route::get("/courses/code_test/{question_id}", [\App\Http\Controllers\CodeTestController::class, "index"])->name("code_test");
     Route::post("/courses/code_test/{question_id}/submit", [\App\Http\Controllers\CodeTestController::class, "codeTestSubmit"])->name("code_test.submit");
     Route::get("/courses/report", [\App\Http\Controllers\StudentCourseController::class, "report"])->name("student_course.report");
+    Route::get("/courses/level/{course_id}",[\App\Http\Controllers\StudentCourseController::class, "level"])->name("student_course.level");
 });
 
 Route::get('generator_builder', '\InfyOm\GeneratorBuilder\Controllers\GeneratorBuilderController@builder')->name('io_generator_builder');

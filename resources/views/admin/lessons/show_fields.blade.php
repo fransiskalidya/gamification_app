@@ -22,6 +22,12 @@
     <p>{{ $lesson->course_id }}</p>
 </div>
 
+<!-- Course Id Field -->
+<div class="form-group">
+    {!! Form::label('level_id', 'Level Id:') !!}
+    <p>{{ $lesson->level_id }}</p>
+</div>
+
 <!-- Posisition Field -->
 <div class="form-group">
     {!! Form::label('posisition', 'Posisition:') !!}

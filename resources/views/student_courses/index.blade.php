@@ -32,7 +32,9 @@
 
                         <!-- card footer -->
                         <div class="card-footer">
-                            <a href="{{ route("student_course.my_course.detail", $course->id) }}" class="btn btn-primary btn-block"><i class="fa fa-play"></i> Start Lesson</a>
+                        {{--<a href="{{ route("student_course.my_course.detail", $course->id) }}" class="btn btn-primary btn-block"><i class="fa fa-play"></i> Start Lesson</a>--}}
+
+                            <a href="{{ route("student_course.level", $course->id ) }}" class="btn btn-primary btn-block"><i class="fa fa-play"></i> Start Lesson</a>
                         </div>
                     </div>
                 </div>

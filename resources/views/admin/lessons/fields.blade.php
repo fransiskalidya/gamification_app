@@ -15,6 +15,11 @@
   {!! Form::label('course_id', 'Course:') !!}
   {!! Form::select('course_id', $courses, null, ['class' => 'form-control']) !!}
 </div>
+<!-- level Id Field -->
+<div class="form-group col-sm-6">
+  {!! Form::label('level_id', 'Level:') !!}
+  {!! Form::select('level_id', $level, null, ['class' => 'form-control']) !!}
+</div>
 
 <!-- Posisition Field -->
 <div class="form-group col-sm-6">

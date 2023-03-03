@@ -42,6 +42,7 @@
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.nicescroll.js') }}"></script>
 <script src="{{ asset('assets/stisla/js/stisla.js') }}"></script>
+<script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
 <script src="{{ asset('js/quill/quill.js') }}"></script>
 
