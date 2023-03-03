@@ -59,7 +59,8 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        //
+        $level = Level::find($id);
+        return view('admin.level.edit', compact('level'));
     }
 
     /**
