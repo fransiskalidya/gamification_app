@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Level;
+use App\Models\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Laracasts\Flash\Flash;
 
 class LevelController extends Controller
 {
@@ -26,7 +28,8 @@ class LevelController extends Controller
      */
     public function create()
     {
-        //
+        $courses = Course::all()->pluck("course_name", "id")->toArray();
+        return view('admin.level.create',compact('courses'));
     }
 
     /**
@@ -37,7 +40,13 @@ class LevelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $level = Level::create([
+            'name'  => $request->name,
+            'description'   => $request->description,
+            'course_id'     => $request->course_id,
+        ]);
+
+        return redirect(route('admin.level.index'));
     }
 
     /**
@@ -60,7 +69,8 @@ class LevelController extends Controller
     public function edit($id)
     {
         $level = Level::find($id);
-        return view('admin.level.edit', compact('level'));
+        $courses = Course::all()->pluck("course_name", "id")->toArray();
+        return view('admin.level.edit', compact('level','courses'));
     }
 
     /**
@@ -72,7 +82,15 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $level = Level::find($id);
+        $level->name   = $request->name;
+        $level->description = $request->description;
+        $level->course_id   = $request->course_id;
+        $level->save();
+
+        Flash::success('Level updated successfully.');
+
+        return redirect(route('admin.level.index'));
     }
 
     /**
@@ -83,6 +101,12 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $level = Level::firstwhere('id', $id);
+        $level->delete();
+
+        Flash::success('Level delated successfully.');
+
+        return redirect(route('admin.level.index'));
+        
     }
 }
