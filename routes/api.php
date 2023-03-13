@@ -40,6 +40,9 @@ Route::post('questions/check_answer', [App\Http\Controllers\API\QuestionAPIContr
 
 Route::post("questions/error_code_log/create", [App\Http\Controllers\ErrorCodeLogController::class, "create"]);
 
+Route::post("questions/exercise_code_log/create", [App\Http\Controllers\ExerciseCodeLogController::class, "create"]);
+
+
 Route::get("dashboard/get_chart_data", [App\Http\Controllers\API\DashboardAPIController::class, "getChartData"]);
 
 

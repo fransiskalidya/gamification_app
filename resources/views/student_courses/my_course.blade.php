@@ -115,13 +115,13 @@
                   @foreach ($code_tests as $index => $question)
                     <div>
                       {!! $question->question !!}
-                      @if (in_array($question->id, $finish_code_tests))
-                        <a href="{{ route('code_test', ['question_id' => $question->id, 'course_id' => $course->id, 'content_id' => $content->id]) }}"
+                      {{--@if (in_array($question->id, $finish_code_tests))
+                        <a href="{{ route('code_test', ['question_id' => $question->id, 'course_id' => $course->id, 'content_id' => $content->id, 'level_id' => $level->id]) }}"
                           class="btn btn-primary">See Result</a>
-                      @else
-                        <a href="{{ route('code_test', ['question_id' => $question->id, 'course_id' => $course->id, 'content_id' => $content->id]) }}"
-                          class="btn btn-primary">Lest Test</a>
-                      @endif
+                      @else --}}
+                        <a href="{{ route('code_test', ['question_id' => $question->id, 'course_id' => $course->id, 'content_id' => $content->id, 'level_id' => $level->id]) }}"
+                          class="btn btn-primary">Let's Test</a>
+                      {{--@endif--}}
 
                       {{-- <br><hr /> --}}
                       {{-- <b>write your answer</b> --}}

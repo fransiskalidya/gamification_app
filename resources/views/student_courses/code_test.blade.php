@@ -19,40 +19,44 @@
   </style>
   <div style="margin-top: 70px">
     <div class="row">
-      @if (!$is_finish)
+      {{--@if (!$is_finish)--}}
         <div class="col-md-7" style="min-height: 100vh">
           <div class="editor"></div>
         </div>
-      @endif
+      {{--@endif--}}
 
-      @if ($is_finish)
+      {{--@if ($is_finish)
         <div class="col-md-7 p-5">
-          <h3>Error Logs ({{ $error_logs->count() }})</h3>
+          <h3>Exercise Logs ({{ $exercise_logs->count() }})</h3>
           <div>
-            @foreach ($error_logs as $i => $err)
+            @foreach ($exercise_logs as $i => $exer)
               <div class="card card-sm">
                 <div class="card-body">
-                  <span class="badge badge-danger mb-2"> Error {{ $i + 1 }}</span><br />
-                  <pre>{{ $err->error_message }}</pre>
+                  @if($exer->is_error == 1)
+                    <span class="badge badge-danger mb-2"> Error</span><br />
+                  @else
+                    <span class="badge badge-success mb-2"> Success</span><br />
+                  @endif
+                    <pre>{{ $exer->message }}</pre>
                 </div>
               </div>
             @endforeach
           </div>
         </div>
-      @endif
+      @endif --}}
 
       <div class="col-md-5 p-5">
         <div>
           <h3 class="card-title">Exercise</h3>
           {!! $question->question !!}
         </div><br />
-        @if (!$is_finish)
+        {{--@if (!$is_finish)--}}
           <div>
             Run Output<br />
             <pre id="output"></pre>
           </div>
-        @else
-          <div>
+        {{--@else--}}
+          {{--<div>
             <span class="badge badge-info">
               Duration from {{ $user_score->started_at }} to
               {{ $user_score->ended_at }}
@@ -61,7 +65,7 @@
               On Timer {{ $user_score->on_timer }}
             </span>
           </div>
-        @endif
+        @endif--}}
 
       </div>
     </div>
@@ -138,11 +142,13 @@
       }).done(function(data) {
         $('#output').text(`${data.output.java}\n${data.output.test_output}`);
         $('#score').val(data.output.point || 0);
-
+        
         if (data.output.point === 0 || data.output.point === undefined) {
-          send_err_code(data.output)
+          // send_err_code(data.output)
+          send_exercise_code(data.output);
         } else {
-          submitCode();
+          send_exercise_code(data.output);
+          // submitCode();
         }
       }).fail(function(data, err) {
         alert("fail " + JSON.stringify(data) + " " + JSON.stringify(err));
@@ -170,49 +176,50 @@
       });
     }
 
-    var is_finish = "{{ $is_finish }}";
+    function send_exercise_code(exercise) {
+      var user_id = $("#user_id").val();
+      var question_id = $("#question_id").val();
+      var message = exercise.java + "" + exercise.test_output;
 
-    var current_time = "";
-
-    if (is_finish !== "1") {
-      var target = moment().add('<?= $question->timer ?>', "minutes");
-      var cs = localStorage.getItem("code_session");
-      if (cs == null || cs == undefined || cs !== window.location.href) {
-        localStorage.setItem("code_session", window.location.href);
-        localStorage.setItem("time_end", target)
-        localStorage.setItem("start_time", moment().format("YYYY-MM-DD HH:mm:ss"));
-      } else {
-        var te = localStorage.getItem("time_end")
-        target = moment(te);
-
+      if(exercise.point === 0){
+        var is_error = 1;
+      } else{
+        var is_error = 0;
       }
 
-      var x = setInterval(function() {
-        diff = target.diff(moment());
-        if (diff <= 0) {
-          clearInterval(x);
-          // If the count down is finished, write some text
-          $('#timer').text("TIME OUT");
-          submitCodeTO()
-          $("#confirmModal2").modal();
-        } else {
-          current_time = moment.utc(diff).format("HH:mm:ss");
-          $('#timer').text(current_time);
-        }
-      }, 1000);
-
+      var data = {
+        user_id: user_id,
+        question_id: question_id,
+        message_content: message,
+        is_error: is_error
+      }
+      $.ajax({
+        url: "/api/questions/exercise_code_log/create",
+        type: "POST",
+        data: data
+      }).done(function(data) {
+        console.log(data);
+      }).fail(function(data, exercise) {
+        console.log(data);
+        console.log(exercise);
+      });
     }
 
+    
+
     function submitCode() {
+      debugger;
       var user_id = $("#user_id").val();
       var question_id = $("#question_id").val();
       var content_id = $("#content_id").val();
       var course_id = $("#course_id").val();
+      var level_id = $("#level_id").val();
       var score = $("#score").val();
       var _token = document.getElementsByName("_token")[0].value;
-      var start_time = localStorage.getItem("start_time");
-      var end_time = moment().format("YYYY-MM-DD HH:mm:ss");
+      // var start_time = localStorage.getItem("start_time");
+      // var end_time = moment().format("YYYY-MM-DD HH:mm:ss");
 
+      debugger;
       $.ajax({
         url: "{{ route('code_test.submit', [$question->id]) }}",
         method: "post",
@@ -222,9 +229,10 @@
           content_id: content_id,
           course_id: course_id,
           score: score,
-          started_at: start_time,
-          ended_at: end_time,
-          on_timer: current_time,
+          // started_at: start_time,
+          level_id: level_id,
+          // ended_at: end_time,
+          // on_timer: current_time,
           _token: _token
         }
       }).done(res => {

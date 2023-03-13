@@ -61,7 +61,7 @@
                   Question Name
                 </div>
 
-                <div class="col-md-5">
+                {{--<div class="col-md-5">
                   @php
                     $f = \Carbon\Carbon::parse($sc->started_at);
                     $t = \Carbon\Carbon::parse($sc->ended_at);
@@ -79,11 +79,12 @@
                     {{ $sc->started_at }} <i class="fa fa-arrow-right mx-2 text-primary"></i>
                     {{ $sc->ended_at }}
                   </div>
-                </div>
+                </div>--}}
 
                 <div class="col-md-2">
                   @php
-                    $err = \App\Models\ErrorCodeLog::where(['user_id' => Auth::id(), 'question_id' => $sc->question_id]);
+                    $err = \App\Models\ExerciseCodeLog::where(['user_id' => Auth::id(), 'question_id' => $sc->question_id, 'is_error' => 1]);
+                    $sucess = \App\Models\ExerciseCodeLog::where(['user_id' => Auth::id(), 'question_id' => $sc->question_id, 'is_error' => 0])
                   @endphp
                   <span class="badge badge-danger mt-2">
                     {{ $err->count() }} Errors
@@ -92,8 +93,21 @@
 
                 <div class="col-md-2">
                   <span class="badge badge-success mt-2">
+                      {{ $sucess->count() }} Success
+                  </span><br />
+                </div>
+
+                <div class="col-md-2">
+                  <span class="badge badge-info mt-2">
                     Question Score: {{ $sc->score }}
                   </span>
+                </div>
+
+                <div class="col-md-3 " style="text-align:center">
+                  <a href="{{ route('student_course.report.detail', ['question_id' => $sc->question_id]) }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+                    <i class="fa fa-info-circle"></i>
+                    Detail
+                  </a>
                 </div>
               </div>
             </div>

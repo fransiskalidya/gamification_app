@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Level;
 use App\Models\Lesson;
 use App\Models\UserScore;
+use App\Models\ExerciseCodeLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -103,7 +104,7 @@ $fullbadge = BadgeSetting::all();
         $questions = Question::where(["is_essay" => "0", "content_id" => $content_id])->get();
         $code_test = Question::where(["is_essay" => "1", "content_id" => $content_id])->get();
         $take = UserScore::where("user_id", Auth::id())->pluck("question_id")->toArray();
-
+        
         //active_lesson untuk melihat course yang dibuka saat ini
         return view("student_courses.my_course", [
             "level" => $level,
@@ -129,6 +130,8 @@ $fullbadge = BadgeSetting::all();
         $current_badge = BadgeSetting::where("min", "<=", $total_score)->where("max", ">=", $total_score)->first();
         $take = UserScore::where("user_id", Auth::id())->pluck("question_id")->toArray();
         $code_test_score = UserScore::where(["user_id" => Auth::id()])->whereNotNull("question_id")->get();
+        // $his_error = ExerciseCodeLog::where()
+        // $his_success = ExerciseCodeLog::where
 
         return view("student_courses.report", [
             "score" => $user_score,
@@ -138,6 +141,15 @@ $fullbadge = BadgeSetting::all();
             "finish_code_tests" => $take,
             "code_score" => $code_test_score
         ]);
+    }
+
+    public function detailReport($question_id){
+        $question = Question::find($question_id);
+        $score = UserScore::where("user_id", Auth::id())->where("question_id", $question_id)->first();
+        $exercise_logs = ExerciseCodeLog::where("user_id", Auth::id())->where("question_id", $question_id)->orderBy('id','DESC')->get();
+
+        return view("student_courses.detail_report", compact('exercise_logs', 'score', 'question'));
+
     }
 
     public function level($course_id){
